@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoRegistroQR">
         <activity
+            android:name=".Exito"
+            android:exported="false" />
+        <activity
+            android:name=".exito"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
