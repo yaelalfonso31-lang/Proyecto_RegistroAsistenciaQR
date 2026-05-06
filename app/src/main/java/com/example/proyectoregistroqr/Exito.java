@@ -1,6 +1,8 @@
 package com.example.proyectoregistroqr;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +11,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class Exito extends AppCompatActivity {
+
+    Button btnAtras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +23,12 @@ public class Exito extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+        btnAtras = findViewById(R.id.btnAtras);
+
+        btnAtras.setOnClickListener(v -> {
+            Intent intent = new Intent(Exito.this, MainActivity.class); //Aqui va la pantalla de escaner
+            startActivity(intent);
         });
     }
 }

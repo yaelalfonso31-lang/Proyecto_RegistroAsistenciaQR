@@ -21,22 +21,27 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Asistencia registrada"
-            android:textSize="30sp"
+            android:text="Asistencia Registrada Correctamente"
+            android:textSize="35sp"
             android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            android:textAlignment="center"/>
 
-        <ImageView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:src=""/>
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="350dp"
+            android:layout_height="350dp"
+            app:lottie_rawRes="@raw/congratulations"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
 
         <Button
             android:id="@+id/btnAtras"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Atrás"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:textSize="25sp"
+            android:backgroundTint="@color/azul_primary"/>
 
     </LinearLayout>
 
