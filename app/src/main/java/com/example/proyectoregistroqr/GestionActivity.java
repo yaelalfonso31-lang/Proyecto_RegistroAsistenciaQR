@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import android.widget.Toast;
 
 public class GestionActivity extends AppCompatActivity {
 
@@ -22,9 +25,26 @@ public class GestionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gestion);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Asistencias");
 
         recyclerView = findViewById(R.id.recyclerViewAsistencias);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        TablaAsistencias nuevaAsistencia = new TablaAsistencias(
+                "ID_PRUEBA_1",
+                "201912345",
+                "Yael Serrano",
+                "10/05/2026",
+                "08:00 AM"
+        );
+        myRef.push().setValue(nuevaAsistencia)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "¡Conexión exitosa! Dato guardado en Firebase", Toast.LENGTH_LONG).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al guardar: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
 
         // Agregamos algunos datos de prueba para que puedas ver la tabla llena de momento
         // Datos de prueba actualizados con 5 parámetros (ID, Matrícula, Nombre, Fecha, Hora)
