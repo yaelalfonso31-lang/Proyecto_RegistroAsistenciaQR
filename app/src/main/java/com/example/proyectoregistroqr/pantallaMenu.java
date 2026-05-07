@@ -33,5 +33,24 @@ public class pantallaMenu extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Button btnGestion = findViewById(R.id.btnGestion);
+        btnGestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(pantallaMenu.this, GestionActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btnInformes = findViewById(R.id.btnInformes); // Asegúrate de tener este botón en tu layout del menú
+        btnInformes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(pantallaMenu.this, Informes.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }
