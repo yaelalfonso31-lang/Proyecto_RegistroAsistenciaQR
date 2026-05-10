@@ -1,5 +1,6 @@
 package com.example.proyectoregistroqr;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -41,6 +42,8 @@ public class NuevoRegistro extends AppCompatActivity {
 
         btnAtras.setOnClickListener(v -> {
             Toast.makeText(this, "Registro cancelado", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(NuevoRegistro.this, GestionActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -52,58 +55,59 @@ public class NuevoRegistro extends AppCompatActivity {
         String edadStr = etEdad.getText().toString().trim();
 
         if (TextUtils.isEmpty(nombre)) {
-            etNombre.setError("Ingrese el nombre");
+            Toast.makeText(this, "Ingrese el nombre", Toast.LENGTH_SHORT).show();
             etNombre.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(apellidos)) {
-            etApellidos.setError("Ingrese los apellidos");
+            Toast.makeText(this, "Ingrese los apellidos", Toast.LENGTH_SHORT).show();
             etApellidos.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(telefono)) {
-            etTelefono.setError("Ingrese el teléfono");
+            Toast.makeText(this, "Ingrese el teléfono", Toast.LENGTH_SHORT).show();
             etTelefono.requestFocus();
             return;
         }
 
         if (!telefono.matches("\\d{10}")) {
-            etTelefono.setError("Teléfono inválido (10 dígitos)");
+            Toast.makeText(this, "Teléfono inválido (10 dígitos)", Toast.LENGTH_SHORT).show();
             etTelefono.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(correo)) {
-            etCorreo.setError("Ingrese el correo");
+            Toast.makeText(this, "Ingrese el correo", Toast.LENGTH_SHORT).show();
             etCorreo.requestFocus();
             return;
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
-            etCorreo.setError("Correo inválido");
+            Toast.makeText(this, "Correo inválido", Toast.LENGTH_SHORT).show();
             etCorreo.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(edadStr)) {
-            etEdad.setError("Ingrese la edad");
+            Toast.makeText(this, "Ingrese la edad", Toast.LENGTH_SHORT).show();
             etEdad.requestFocus();
             return;
         }
 
         int edad;
+
         try {
             edad = Integer.parseInt(edadStr);
         } catch (NumberFormatException e) {
-            etEdad.setError("Edad inválida");
+            Toast.makeText(this, "Edad inválida", Toast.LENGTH_SHORT).show();
             etEdad.requestFocus();
             return;
         }
 
         if (edad < 1 || edad > 120) {
-            etEdad.setError("Edad fuera de rango");
+            Toast.makeText(this, "Edad fuera de rango", Toast.LENGTH_SHORT).show();
             etEdad.requestFocus();
             return;
         }

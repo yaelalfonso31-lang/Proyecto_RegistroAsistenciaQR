@@ -27,7 +27,7 @@ public class Exito extends AppCompatActivity {
         btnAtras = findViewById(R.id.btnAtras);
 
         btnAtras.setOnClickListener(v -> {
-            Intent intent = new Intent(Exito.this, MainActivity.class); //Aqui va la pantalla de escaner
+            Intent intent = new Intent(Exito.this, pantallaMenu.class);
             startActivity(intent);
         });
     }
