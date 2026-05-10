@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "443335342223",
+    "project_id": "basedatosappasistenciaqr",
+    "storage_bucket": "basedatosappasistenciaqr.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443335342223:android:c2383fb3596fce9f0158fa",
+        "android_client_info": {
+          "package_name": "com.example.proyectoregistroqr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYw7FNTX9c3MNDpt2v58LkGENHA13UQ5Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

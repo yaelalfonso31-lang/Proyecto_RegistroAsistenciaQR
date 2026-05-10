@@ -6,4 +6,5 @@
     <color name="verde_exito">#2ECC71</color>
     <color name="azul_primary">#0026E9</color>
     <color name="rojo_error">#F44336</color>
+    <color name="green">#03dac6</color>
 </resources>

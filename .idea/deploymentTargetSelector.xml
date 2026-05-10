@@ -2,7 +2,11 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
+<<<<<<< HEAD
       <SelectionState runConfigName="app">
+=======
+      <SelectionState runConfigName="AppQR">
+>>>>>>> d51bcfc8b97f6f7960f9e4a47d42a55a215b7bcd
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
