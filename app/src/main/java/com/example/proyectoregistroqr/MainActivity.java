@@ -67,6 +67,13 @@ public class MainActivity extends AppCompatActivity {
                         if (passDB != null && passDB.equals(passIngresada)) {
                             // Contraseña correcta, leemos el rol
                             String rol = userSnapshot.child("rol").getValue(String.class);
+                            String nombreDB = userSnapshot.child("nombre").getValue(String.class);
+                            String matriculaDB = userSnapshot.child("matricula").getValue(String.class);
+                            getSharedPreferences("SESION", MODE_PRIVATE).edit()
+                                    .putString("nombre", nombreDB)
+                                    .putString("matricula", matriculaDB)
+                                    .apply();
+
                             accederSegunRol(rol);
                         } else {
                             Toast.makeText(MainActivity.this, "Contraseña incorrecta", Toast.LENGTH_SHORT).show();

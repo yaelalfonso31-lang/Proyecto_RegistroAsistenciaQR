@@ -1,21 +1,16 @@
 package com.example.proyectoregistroqr;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.journeyapps.barcodescanner.BarcodeCallback;
-import com.journeyapps.barcodescanner.BarcodeResult;
-import com.journeyapps.barcodescanner.DecoratedBarcodeView;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,104 +18,79 @@ import java.util.Locale;
 
 public class pantallaQR extends AppCompatActivity {
 
-    private static final int CODIGO_PERMISO_CAMARA = 100;
-    private DecoratedBarcodeView escanerEnVivo;
-    private boolean yaEscaneado = false; // Bandera para evitar escaneos dobles rápidos
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_qr);
 
-        escanerEnVivo = findViewById(R.id.escanerEnVivo);
-
-        verificarPermisoCamara();
+        // IntentIntegrator maneja automáticamente los permisos de la cámara
+        // y abre su propia interfaz de escaneo.
+        new IntentIntegrator(this)
+                .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
+                .setPrompt("Escanea el código QR del Maestro")
+                .setCameraId(0)
+                .setBeepEnabled(true)
+                .setOrientationLocked(false)
+                .initiateScan();
     }
 
-    private void iniciarEscaner() {
-        escanerEnVivo.decodeContinuous(new BarcodeCallback() {
-            @Override
-            public void barcodeResult(BarcodeResult result) {
-                if (result.getText() != null && !yaEscaneado) {
-                    yaEscaneado = true; // Bloqueamos para que no lea el mismo código 20 veces por segundo
-                    escanerEnVivo.pause(); // Pausamos la cámara
-
-                    String matriculaEscaneada = result.getText();
-
-                    // Obtener fecha y hora actuales del teléfono
-                    String fechaActual = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-                    String horaActual = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(new Date());
-
-                    // Conectar a Firebase
-                    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Asistencias");
-                    String idGenerado = myRef.push().getKey();
-
-                    // Creamos el objeto (Asumimos que el QR contiene la matrícula)
-                    // Si tienes forma de saber el nombre, lo cambias; por ahora le ponemos "Alumno Escaneado"
-                    TablaAsistencias nuevaAsistencia = new TablaAsistencias(
-                            idGenerado,
-                            matriculaEscaneada,
-                            "Alumno Escaneado",
-                            fechaActual,
-                            horaActual
-                    );
-
-                    // Guardar en la base de datos
-                    if (idGenerado != null) {
-                        myRef.child(idGenerado).setValue(nuevaAsistencia)
-                                .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(pantallaQR.this, "¡Asistencia registrada!", Toast.LENGTH_SHORT).show();
-
-                                    // Ir a la pantalla de éxito con la animación
-                                    Intent intent = new Intent(pantallaQR.this, Exito.class);
-                                    startActivity(intent);
-                                    finish(); // Cerramos la pantalla del escáner
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(pantallaQR.this, "Error al guardar: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                                    yaEscaneado = false; // Permitimos intentar de nuevo
-                                    escanerEnVivo.resume();
-                                });
-                    }
-                }
-            }
-        });
-
-        escanerEnVivo.resume();
-    }
-
-    private void verificarPermisoCamara() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            iniciarEscaner();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CODIGO_PERMISO_CAMARA);
-        }
-    }
-
+    // Este método se ejecuta automáticamente cuando el escáner lee algo o se cancela
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CODIGO_PERMISO_CAMARA) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                iniciarEscaner();
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+        if (result != null) {
+            if (result.getContents() == null) {
+                // Si el usuario presiona "Atrás" sin escanear
+                Toast.makeText(this, "Escaneo cancelado", Toast.LENGTH_SHORT).show();
+                finish();
             } else {
-                Toast.makeText(this, "Necesitas dar permiso para pasar lista", Toast.LENGTH_LONG).show();
+                // Si escaneó exitosamente, el contenido del QR (la fecha) estará aquí
+                String fechaQR = result.getContents();
+                registrarAsistenciaFirebase(fechaQR);
             }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        escanerEnVivo.pause();
-    }
+    private void registrarAsistenciaFirebase(String fechaLeida) {
+        // 1. Recuperar los datos del alumno de la "sesión" local (guardados en el Login)
+        SharedPreferences prefs = getSharedPreferences("SESION", MODE_PRIVATE);
+        String nombreAlumno = prefs.getString("nombre", "Alumno Desconocido");
+        String matriculaAlumno = prefs.getString("matricula", "000000000");
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            yaEscaneado = false; // Reiniciamos la bandera si volvemos a la pantalla
-            escanerEnVivo.resume();
+        // 2. Obtener la hora actual exacta del sistema del teléfono del alumno
+        String horaActual = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(new Date());
+
+        // 3. Conectar con el nodo "Asistencias" en Firebase
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Asistencias");
+        String idAsistencia = myRef.push().getKey();
+
+        // 4. Crear el objeto con tu modelo (TablaAsistencias)
+        TablaAsistencias nuevaAsistencia = new TablaAsistencias(
+                idAsistencia,
+                matriculaAlumno,
+                nombreAlumno,
+                fechaLeida, // La fecha que proyectó el maestro en su QR
+                horaActual
+        );
+
+        // 5. Guardar en la nube de Firebase
+        if (idAsistencia != null) {
+            myRef.child(idAsistencia).setValue(nuevaAsistencia)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "¡Asistencia registrada!", Toast.LENGTH_SHORT).show();
+
+                        // Si todo sale bien, vamos a la pantalla de Éxito para ver la animación
+                        Intent intent = new Intent(pantallaQR.this, Exito.class);
+                        startActivity(intent);
+                        finish(); // Cerramos la pantalla actual
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Error al registrar: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        finish();
+                    });
         }
     }
 }
