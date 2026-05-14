@@ -37,12 +37,13 @@
 
         <EditText
             android:id="@+id/etMatricula"
-            android:hint="Matrícula"
+            android:hint="Matrícula (9 dígitos)"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
             android:textSize="20sp"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:maxLength="9" />/>
 
         <EditText
             android:id="@+id/etNombre"
@@ -54,15 +55,19 @@
 
         <EditText
             android:id="@+id/etFecha"
-            android:hint="Fecha (Ej: 2026-05-13)"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="date"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:hint="Seleccionar Fecha"
+            android:focusable="false"
+            android:clickable="true"/>
 
         <EditText
             android:id="@+id/etHora"
-            android:hint="Hora (Ej: 08:00 AM)"
+            android:hint="Seleccionar Hora"
+            android:focusable="false"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="time"

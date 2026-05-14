@@ -18,6 +18,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoRegistroQR">
         <activity
+            android:name=".GenerarQR"
+            android:exported="false" />
+        <activity
+            android:name=".RegistroUsuario"
+            android:exported="false" />
+        <activity
             android:name=".NuevoRegistro"
             android:exported="false" />
         <activity

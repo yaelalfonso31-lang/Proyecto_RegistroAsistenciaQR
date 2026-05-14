@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class pantallaMenu extends AppCompatActivity {
+    Button btnEscaner, btnGenerar, btnGestion, btnInformes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +24,34 @@ public class pantallaMenu extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
+            btnEscaner = findViewById(R.id.btnEscanerQR);
+            btnGenerar = findViewById(R.id.btnGenerarQR);
+            btnGestion = findViewById(R.id.btnGestion);
+            btnInformes = findViewById(R.id.btnInformes);
+
+            // Recibir el rol del Intent
+            String rol = getIntent().getStringExtra("rol");
+
+            if (rol != null && rol.equals("admin")) {
+                // Menú para el Maestro
+                btnGenerar.setVisibility(View.VISIBLE);
+                btnGestion.setVisibility(View.VISIBLE);
+                btnInformes.setVisibility(View.VISIBLE);
+                btnEscaner.setVisibility(View.GONE);
+            } else {
+                // Menú para el Alumno
+                btnEscaner.setVisibility(View.VISIBLE);
+                btnGenerar.setVisibility(View.GONE);
+                btnGestion.setVisibility(View.GONE);
+                btnInformes.setVisibility(View.GONE);
+            }
+
+            // Configurar clic para Generar QR
+            btnGenerar.setOnClickListener(v -> {
+                startActivity(new Intent(this, GenerarQR.class));
+            });
 
         Button btnEscaner = findViewById(R.id.btnEscanerQR);
 

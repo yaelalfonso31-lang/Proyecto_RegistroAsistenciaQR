@@ -13,6 +13,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import java.util.Calendar;
+import java.util.Locale;
+import java.text.SimpleDateFormat;
+
 // Importaciones necesarias para Firebase
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,6 +28,7 @@ public class EditarRegistro extends AppCompatActivity {
     private Button btnCancelar, btnGuardar;
     private EditText etMatricula, etNombre, etFecha, etHora;
     private String idRegistro;
+    private Calendar calendario = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +42,7 @@ public class EditarRegistro extends AppCompatActivity {
             return insets;
         });
 
-        // 1. Enlazamos las variables con los IDs del diseño
+        // Enlazamos las variables con los IDs del diseño
         btnCancelar = findViewById(R.id.btnCancelar);
         btnGuardar = findViewById(R.id.btnGuardar);
         etMatricula = findViewById(R.id.etMatricula);
@@ -43,7 +50,7 @@ public class EditarRegistro extends AppCompatActivity {
         etFecha = findViewById(R.id.etFecha);
         etHora = findViewById(R.id.etHora);
 
-        // 2. Recuperamos los datos que nos envía la Gestión de Asistencias
+        //Recuperamos los datos que nos envía la Gestión de Asistencias
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("matricula")) {
             idRegistro = intent.getStringExtra("id");
@@ -52,8 +59,25 @@ public class EditarRegistro extends AppCompatActivity {
             etFecha.setText(intent.getStringExtra("fecha"));
             etHora.setText(intent.getStringExtra("hora"));
         }
+        etFecha.setOnClickListener(v -> {
+            new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+                calendario.set(Calendar.YEAR, year);
+                calendario.set(Calendar.MONTH, month);
+                calendario.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                actualizarFechaEnCampo();
+            }, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH), calendario.get(Calendar.DAY_OF_MONTH)).show();
+        });
 
-        // 3. Configuración de clics
+        // Configurar el Selector de Hora al hacer clic
+        etHora.setOnClickListener(v -> {
+            new TimePickerDialog(this, (view, hourOfDay, minute) -> {
+                calendario.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendario.set(Calendar.MINUTE, minute);
+                actualizarHoraEnCampo();
+            }, calendario.get(Calendar.HOUR_OF_DAY), calendario.get(Calendar.MINUTE), false).show();
+        });
+
+        //Configuración de clics
         btnCancelar.setOnClickListener(v -> {
             Toast.makeText(this, "Edición cancelada", Toast.LENGTH_SHORT).show();
             finish(); // Cierra esta pantalla
@@ -62,13 +86,24 @@ public class EditarRegistro extends AppCompatActivity {
         btnGuardar.setOnClickListener(v -> validarYGuardar());
     }
 
+    private void actualizarFechaEnCampo() {
+        String formato = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(formato, Locale.US);
+        etFecha.setText(sdf.format(calendario.getTime()));
+    }
+
+    private void actualizarHoraEnCampo() {
+        String formato = "hh:mm a";
+        SimpleDateFormat sdf = new SimpleDateFormat(formato, Locale.US);
+        etHora.setText(sdf.format(calendario.getTime()));
+    }
+
     private void validarYGuardar() {
         String matricula = etMatricula.getText().toString().trim();
         String nombre = etNombre.getText().toString().trim();
         String fecha = etFecha.getText().toString().trim();
         String hora = etHora.getText().toString().trim();
 
-        // Validaciones para que no dejen campos en blanco
         if (TextUtils.isEmpty(matricula)) {
             etMatricula.setError("Ingrese la matrícula");
             etMatricula.requestFocus();
@@ -89,8 +124,17 @@ public class EditarRegistro extends AppCompatActivity {
             etHora.requestFocus();
             return;
         }
+        if (matricula.length() != 9) {
+            etMatricula.setError("La matrícula debe tener exactamente 9 dígitos");
+            etMatricula.requestFocus();
+            return;
+        }
+        if (!nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")) {
+            etNombre.setError("El nombre solo puede contener letras");
+            etNombre.requestFocus();
+            return;
+        }
 
-        // Si pasa todas las validaciones, actualizamos en Firebase
         actualizarEnFirebase(matricula, nombre, fecha, hora);
     }
 

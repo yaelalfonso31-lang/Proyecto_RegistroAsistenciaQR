@@ -10,6 +10,13 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:lottie_rawRes="@raw/wumpushi"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"/>
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +24,7 @@
         android:background="@drawable/custom_edittext"
         app:cardCornerRadius="30dp"
         app:cardElevation="20dp">
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,24 +37,27 @@
                 android:id="@+id/textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Inicio de sesion"
+                android:text="Inicio de sesión"
+                android:textStyle="bold"
                 android:textAlignment="center"
                 android:textSize="34sp" />
 
             <EditText
+                android:id="@+id/etCorreoLogin"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="40dp"
                 android:background="@drawable/custom_edittext"
                 android:drawableLeft="@drawable/baseline_person_24"
                 android:drawablePadding="8dp"
-                android:hint="Usuario"
+                android:hint="Correo electrónico"
                 android:ems="10"
                 android:inputType="text"
                 android:textColor="@color/black"
                 android:textColorHint="@color/cardview_dark_background" />
 
             <EditText
+                android:id="@+id/etPassLogin"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
@@ -59,7 +70,7 @@
                 android:textColor="@color/black"
                 android:textColorHint="@color/cardview_dark_background" />
 
-            
+
             <Button
                 android:id="@+id/btningresar"
                 android:layout_width="match_parent"
@@ -70,7 +81,17 @@
                 android:textSize="20sp"
                 app:cornerRadius="20dp"
                 />
-            
+
+            <TextView
+                android:id="@+id/tvIrRegistro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¿No tienes cuenta? Regístrate aquí"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:padding="10dp"/>
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

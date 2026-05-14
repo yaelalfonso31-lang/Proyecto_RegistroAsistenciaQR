@@ -36,34 +36,40 @@
             <Button
                 android:id="@+id/btnEscanerQR"
                 android:layout_width="match_parent"
-                android:layout_height="75dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginBottom="20dp"
-                android:backgroundTint="@color/black"
-                android:text="Escáner QR"
+                android:layout_height="wrap_content"
+                android:text="Escanear QR"
+                android:visibility="gone"
+                android:textSize="20sp"
+                app:cornerRadius="20dp"/>
+
+            <Button
+                android:id="@+id/btnGenerarQR"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Generar QR del día"
+                android:visibility="gone"
+                android:textSize="20sp"
+                app:cornerRadius="20dp"/>
+
+            <Button
+                android:id="@+id/btnGestion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Gestión de Asistencias"
+                android:visibility="gone"
                 android:textSize="20sp"
                 app:cornerRadius="20dp" />
 
             <Button
                 android:id="@+id/btnInformes"
                 android:layout_width="match_parent"
-                android:layout_height="75dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginBottom="20dp"
-                android:backgroundTint="@color/black"
+                android:layout_height="wrap_content"
                 android:text="Informes y Gráficas"
+                android:visibility="gone"
                 android:textSize="20sp"
-                app:cornerRadius="20dp" />
+                app:cornerRadius="20dp"/>
 
-            <Button
-                android:id="@+id/btnGestion"
-                android:layout_width="match_parent"
-                android:layout_height="75dp"
-                android:layout_marginHorizontal="20dp"
-                android:backgroundTint="@color/black"
-                android:text="Gestión de Asistencia"
-                android:textSize="20sp"
-                app:cornerRadius="20dp" />
+
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
