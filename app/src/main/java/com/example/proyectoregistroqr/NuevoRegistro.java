@@ -3,7 +3,6 @@ package com.example.proyectoregistroqr;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,110 +13,93 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+// Importaciones de Firebase
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class NuevoRegistro extends AppCompatActivity {
 
-    Button btnAtras, btnRegistrar;
-    EditText etNombre, etApellidos, etTelefono, etCorreo, etEdad;
+    private Button btnAtras, btnRegistrar;
+    private EditText etMatricula, etNombre, etFecha, etHora;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_nuevo_registro);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+        // 1. Enlazar variables con los IDs del diseño
         btnAtras = findViewById(R.id.btnAtras);
         btnRegistrar = findViewById(R.id.btnRegistrar);
+        etMatricula = findViewById(R.id.etMatricula);
         etNombre = findViewById(R.id.etNombre);
-        etApellidos = findViewById(R.id.etApellidos);
-        etTelefono = findViewById(R.id.etTelefono);
-        etCorreo = findViewById(R.id.etCorreo);
-        etEdad = findViewById(R.id.etEdad);
+        etFecha = findViewById(R.id.etFecha);
+        etHora = findViewById(R.id.etHora);
 
-        btnRegistrar.setOnClickListener(v -> validarFormulario());
+        btnRegistrar.setOnClickListener(v -> validarYGuardarEnFirebase());
 
         btnAtras.setOnClickListener(v -> {
             Toast.makeText(this, "Registro cancelado", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(NuevoRegistro.this, GestionActivity.class);
-            startActivity(intent);
+            finish(); // Cierra esta pantalla y vuelve a la tabla
         });
     }
 
-    private void validarFormulario() {
+    private void validarYGuardarEnFirebase() {
+        String matricula = etMatricula.getText().toString().trim();
         String nombre = etNombre.getText().toString().trim();
-        String apellidos = etApellidos.getText().toString().trim();
-        String telefono = etTelefono.getText().toString().trim();
-        String correo = etCorreo.getText().toString().trim();
-        String edadStr = etEdad.getText().toString().trim();
+        String fecha = etFecha.getText().toString().trim();
+        String hora = etHora.getText().toString().trim();
 
+        // Validaciones básicas
+        if (TextUtils.isEmpty(matricula)) {
+            etMatricula.setError("Ingrese la matrícula");
+            etMatricula.requestFocus();
+            return;
+        }
         if (TextUtils.isEmpty(nombre)) {
-            Toast.makeText(this, "Ingrese el nombre", Toast.LENGTH_SHORT).show();
+            etNombre.setError("Ingrese el nombre");
             etNombre.requestFocus();
             return;
         }
-
-        if (TextUtils.isEmpty(apellidos)) {
-            Toast.makeText(this, "Ingrese los apellidos", Toast.LENGTH_SHORT).show();
-            etApellidos.requestFocus();
+        if (TextUtils.isEmpty(fecha)) {
+            etFecha.setError("Ingrese la fecha");
+            etFecha.requestFocus();
+            return;
+        }
+        if (TextUtils.isEmpty(hora)) {
+            etHora.setError("Ingrese la hora");
+            etHora.requestFocus();
             return;
         }
 
-        if (TextUtils.isEmpty(telefono)) {
-            Toast.makeText(this, "Ingrese el teléfono", Toast.LENGTH_SHORT).show();
-            etTelefono.requestFocus();
-            return;
+        // 2. Conexión a Firebase
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Asistencias");
+
+        // 3. Generar un ID único para este nuevo registro
+        String nuevoId = myRef.push().getKey();
+
+        // 4. Crear el objeto usando tu modelo
+        TablaAsistencias nuevaAsistencia = new TablaAsistencias(nuevoId, matricula, nombre, fecha, hora);
+
+        // 5. Enviar a la base de datos
+        if (nuevoId != null) {
+            myRef.child(nuevoId).setValue(nuevaAsistencia)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "Registro guardado en Firebase", Toast.LENGTH_SHORT).show();
+                        // Opcional: Redirigir a tu pantalla de éxito
+                        Intent intent = new Intent(NuevoRegistro.this, Exito.class);
+                        startActivity(intent);
+                        finish(); // Cerrar esta pantalla
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Error al guardar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
         }
-
-        if (!telefono.matches("\\d{10}")) {
-            Toast.makeText(this, "Teléfono inválido (10 dígitos)", Toast.LENGTH_SHORT).show();
-            etTelefono.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(correo)) {
-            Toast.makeText(this, "Ingrese el correo", Toast.LENGTH_SHORT).show();
-            etCorreo.requestFocus();
-            return;
-        }
-
-        if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
-            Toast.makeText(this, "Correo inválido", Toast.LENGTH_SHORT).show();
-            etCorreo.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(edadStr)) {
-            Toast.makeText(this, "Ingrese la edad", Toast.LENGTH_SHORT).show();
-            etEdad.requestFocus();
-            return;
-        }
-
-        int edad;
-
-        try {
-            edad = Integer.parseInt(edadStr);
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Edad inválida", Toast.LENGTH_SHORT).show();
-            etEdad.requestFocus();
-            return;
-        }
-
-        if (edad < 1 || edad > 120) {
-            Toast.makeText(this, "Edad fuera de rango", Toast.LENGTH_SHORT).show();
-            etEdad.requestFocus();
-            return;
-        }
-
-        Toast.makeText(this, "Registro guardado correctamente", Toast.LENGTH_SHORT).show();
-
-        etNombre.setText("");
-        etApellidos.setText("");
-        etTelefono.setText("");
-        etCorreo.setText("");
-        etEdad.setText("");
     }
 }

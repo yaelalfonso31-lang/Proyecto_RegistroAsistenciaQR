@@ -1,64 +1,71 @@
 package com.example.proyectoregistroqr;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.ArrayList;
-import java.util.List;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import android.widget.Toast;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GestionActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private Adaptador adapter;
     private List<TablaAsistencias> listaAsistencias;
+    private DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gestion);
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Asistencias");
 
+        // 1. Inicializar la conexión a la base de datos de Firebase
+        myRef = FirebaseDatabase.getInstance().getReference("Asistencias");
+
+        // 2. Configurar el RecyclerView
         recyclerView = findViewById(R.id.recyclerViewAsistencias);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        TablaAsistencias nuevaAsistencia = new TablaAsistencias(
-                "ID_PRUEBA_1",
-                "201912345",
-                "Yael Serrano",
-                "10/05/2026",
-                "08:00 AM"
-        );
-        myRef.push().setValue(nuevaAsistencia)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "¡Conexión exitosa! Dato guardado en Firebase", Toast.LENGTH_LONG).show();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error al guardar: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
-
-        // Agregamos algunos datos de prueba para que puedas ver la tabla llena de momento
-        // Datos de prueba actualizados con 5 parámetros (ID, Matrícula, Nombre, Fecha, Hora)
         listaAsistencias = new ArrayList<>();
-        listaAsistencias.add(new TablaAsistencias("1", "201912345", "Juan Pérez", "2026-05-06", "08:00 AM"));
-        listaAsistencias.add(new TablaAsistencias("2", "202054321", "María López", "2026-05-06", "08:15 AM"));
-        listaAsistencias.add(new TablaAsistencias("3", "202111222", "Carlos Ruiz", "2026-05-07", "09:00 AM"));
-        listaAsistencias.add(new TablaAsistencias("4", "202233444", "Ana García", "2026-05-07", "09:15 AM"));
-        listaAsistencias.add(new TablaAsistencias("5", "202355666", "Luis Martínez", "2026-05-08", "10:00 AM"));
 
+        // 3. Configurar el botón flotante para crear un registro manual
+        FloatingActionButton fabNuevo = findViewById(R.id.fabNuevoRegistro);
+        fabNuevo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GestionActivity.this, NuevoRegistro.class);
+                startActivity(intent);
+            }
+        });
+
+        // 4. Configurar el Adaptador y sus acciones (Editar y Eliminar)
         adapter = new Adaptador(listaAsistencias, new Adaptador.OnItemClickListener() {
             @Override
             public void onEditarClick(int position) {
-                mostrarDialogoEditar(position);
+                TablaAsistencias asistenciaSeleccionada = listaAsistencias.get(position);
+
+                Intent intent = new Intent(GestionActivity.this, EditarRegistro.class);
+                intent.putExtra("id", asistenciaSeleccionada.getId());
+                intent.putExtra("matricula", asistenciaSeleccionada.getMatricula());
+                intent.putExtra("nombre", asistenciaSeleccionada.getNombre());
+                intent.putExtra("fecha", asistenciaSeleccionada.getFecha());
+                intent.putExtra("hora", asistenciaSeleccionada.getHora());
+
+                startActivity(intent);
             }
 
             @Override
@@ -68,41 +75,60 @@ public class GestionActivity extends AppCompatActivity {
         });
 
         recyclerView.setAdapter(adapter);
-    }
 
-    private void mostrarDialogoEditar(int position) {
-        TablaAsistencias asistencia = listaAsistencias.get(position);
+        // 5. Leer los datos desde Firebase en tiempo real
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listaAsistencias.clear(); // Limpiamos la lista para evitar datos duplicados en pantalla
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    TablaAsistencias asistencia = dataSnapshot.getValue(TablaAsistencias.class);
+                    if (asistencia != null) {
+                        listaAsistencias.add(asistencia);
+                    }
+                }
+                adapter.notifyDataSetChanged(); // Refrescamos la tabla con los datos nuevos
+            }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Editar Asistencia");
-
-        final EditText inputMatricula = new EditText(this);
-        inputMatricula.setText(asistencia.getMatricula());
-        builder.setView(inputMatricula);
-
-        builder.setPositiveButton("Actualizar", (dialog, which) -> {
-            String nuevaMatricula = inputMatricula.getText().toString();
-            asistencia.setMatricula(nuevaMatricula);
-            adapter.notifyItemChanged(position);
-            Toast.makeText(GestionActivity.this, "Registro actualizado", Toast.LENGTH_SHORT).show();
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(GestionActivity.this, "Error al cargar datos desde la nube", Toast.LENGTH_SHORT).show();
+            }
         });
-
-        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss());
-        builder.show();
     }
 
     private void mostrarDialogoEliminar(int position) {
+        // 1. Obtenemos el ID único generado por Firebase para este registro
+        String idABorrar = listaAsistencias.get(position).getId();
+
+        // 2. Apuntamos exactamente al nodo de este registro en la base de datos
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Asistencias").child(idABorrar);
+
+        // 3. Construimos la ventana emergente
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Confirmar Eliminación");
         builder.setMessage("¿Estás seguro de que deseas eliminar este registro?");
 
+        // 4. Qué hacer si el usuario presiona "Eliminar"
         builder.setPositiveButton("Eliminar", (dialog, which) -> {
-            listaAsistencias.remove(position);
-            adapter.notifyItemRemoved(position);
-            Toast.makeText(GestionActivity.this, "Registro eliminado", Toast.LENGTH_SHORT).show();
+            // Borramos el dato de la base de datos en la nube
+            myRef.removeValue()
+                    .addOnSuccessListener(aVoid -> {
+                        // Si se borró bien en la nube, mostramos un mensaje
+                        Toast.makeText(GestionActivity.this, "Registro eliminado correctamente", Toast.LENGTH_SHORT).show();
+                        // (Ojo: No necesitas borrar de listaAsistencias manualmente aquí,
+                        // porque el ValueEventListener de tu onCreate detectará el cambio y actualizará la tabla automáticamente)
+                    })
+                    .addOnFailureListener(e -> {
+                        // Si hubo un error de conexión, avisamos
+                        Toast.makeText(GestionActivity.this, "Error al eliminar el registro", Toast.LENGTH_SHORT).show();
+                    });
         });
 
+        // 5. Qué hacer si el usuario presiona "Cancelar"
         builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss());
+
+        // 6. Mostramos el diálogo en pantalla
         builder.show();
     }
 }

@@ -14,6 +14,7 @@ public class TablaAsistencias {
     private String nombre;
     private String fecha;
     private String hora;
+    public TablaAsistencias() {}
 
     public TablaAsistencias(String id, String matricula, String nombre, String fecha, String hora) {
         this.id = id;
