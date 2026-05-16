@@ -25,9 +25,11 @@
             android:exported="false" />
         <activity
             android:name=".NuevoRegistro"
+            android:theme="@style/Base.Theme.Estilos2"
             android:exported="false" />
         <activity
             android:name=".EditarRegistro"
+            android:theme="@style/Base.Theme.Estilos2"
             android:exported="false" />
         <activity
             android:name=".Exito"
