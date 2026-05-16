@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".registro_usuario">
+    tools:context=".RegistroUsuario">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -21,13 +21,23 @@
         android:text="Crear Cuenta"
         android:textSize="30sp"
         android:textStyle="bold"
+        android:textColor="@color/white"
         android:layout_marginBottom="20dp"/>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:lottie_rawRes="@raw/wumpuscheers"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
 
     <EditText
         android:id="@+id/etNombreRegistro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Nombre completo"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
         android:inputType="textPersonName"/>
 
     <EditText
@@ -35,6 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Correo electrónico"
+        android:textSize="20sp"
         android:inputType="textEmailAddress"/>
 
     <EditText
@@ -42,6 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Contraseña"
+        android:textSize="20sp"
         android:inputType="textPassword"/>
 
     <TextView
@@ -55,8 +67,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <RadioButton android:id="@+id/rbAlumno" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Alumno" android:checked="true"/>
-        <RadioButton android:id="@+id/rbMaestro" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Maestro"/>
+        <RadioButton android:id="@+id/rbAlumno" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Alumno" android:checked="true" android:textSize="20sp"/>
+        <RadioButton android:id="@+id/rbMaestro" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Maestro" android:textSize="20sp"/>
     </RadioGroup>
 
     <EditText
@@ -73,8 +85,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Registrarse"
-        android:backgroundTint="#4CAF50"
-        android:layout_marginTop="20dp"/>
+        android:backgroundTint="@color/verde_exito"
+        android:textColor="@color/white"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"/>
 
     </LinearLayout>
 
