@@ -8,5 +8,4 @@
         <item name="colorPrimary">@color/azul_primary</item>
     </style>
 
-    <style name="Theme.ProyectoRegistroQR" parent="Base.Theme.ProyectoRegistroQR" />
 </resources>

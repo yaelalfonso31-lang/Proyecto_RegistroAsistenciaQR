@@ -43,6 +43,7 @@
             android:exported="false" />
         <activity
             android:name=".pantallaQR"
+            android:theme="@style/Base.Theme.Estilos2"
             android:exported="false" />
         <activity
             android:name=".pantallaMenu"
