@@ -2,9 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".EditarRegistro">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,15 +22,18 @@
             android:textSize="35sp"
             android:textStyle="bold"
             android:layout_marginTop="16dp"
+            android:textColor="@color/white"
             android:textAlignment="center"/>
 
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/profile"
-            android:layout_marginBottom="16dp"/>
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:lottie_rawRes="@raw/wumpusup"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
 
         <EditText
+            android:layout_marginTop="20dp"
             android:id="@+id/etMatricula"
             android:hint="Matrícula (9 dígitos)"
             android:inputType="number"
@@ -79,7 +84,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:textSize="18sp"
-                android:backgroundTint="#F44336"/>
+                android:textColor="@color/white"
+                android:backgroundTint="@color/rojo_error"/>
 
             <Button
                 android:id="@+id/btnGuardar"
@@ -89,7 +95,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:textSize="18sp"
-                android:backgroundTint="#4CAF50"/>
+                android:textColor="@color/white"
+                android:backgroundTint="@color/verde_exito"/>
 
         </LinearLayout>
     </LinearLayout>

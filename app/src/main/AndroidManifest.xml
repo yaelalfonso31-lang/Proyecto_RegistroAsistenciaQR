@@ -16,21 +16,25 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ProyectoRegistroQR">
+        android:theme="@style/Base.Theme.Estilos">
         <activity
             android:name=".GenerarQR"
             android:exported="false" />
         <activity
             android:name=".RegistroUsuario"
+            android:theme="@style/Base.Theme.Estilos2"
             android:exported="false" />
         <activity
             android:name=".NuevoRegistro"
+            android:theme="@style/Base.Theme.Estilos2"
             android:exported="false" />
         <activity
             android:name=".EditarRegistro"
+            android:theme="@style/Base.Theme.Estilos2"
             android:exported="false" />
         <activity
             android:name=".Exito"
+            android:theme="@style/Base.Theme.Estilos2"
             android:exported="false" />
         <activity
             android:name=".Informes"
@@ -43,9 +47,11 @@
             android:exported="false" />
         <activity
             android:name=".pantallaQR"
+            android:theme="@style/Base.Theme.Estilos2"
             android:exported="false" />
         <activity
             android:name=".pantallaMenu"
+            android:theme="@style/Base.Theme.Estilos2"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

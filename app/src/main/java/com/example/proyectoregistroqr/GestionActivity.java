@@ -3,6 +3,8 @@ package com.example.proyectoregistroqr;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,11 +29,19 @@ public class GestionActivity extends AppCompatActivity {
     private Adaptador adapter;
     private List<TablaAsistencias> listaAsistencias;
     private DatabaseReference myRef;
+    private ImageButton btnAtras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gestion);
+
+        btnAtras = findViewById(R.id.btnAtras);
+
+        btnAtras.setOnClickListener(v -> {
+            Intent intent = new Intent(GestionActivity.this, pantallaMenu.class);
+            startActivity(intent);
+        });
 
         // 1. Inicializar la conexión a la base de datos de Firebase
         myRef = FirebaseDatabase.getInstance().getReference("Asistencias");

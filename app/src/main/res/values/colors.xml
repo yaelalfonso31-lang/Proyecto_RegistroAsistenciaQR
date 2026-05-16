@@ -7,4 +7,7 @@
     <color name="azul_primary">#0026E9</color>
     <color name="rojo_error">#F44336</color>
     <color name="green">#03dac6</color>
+    <color name="morado">#3B38FF</color>
+    <color name="azul_cielo">#008EEA</color>
+    <color name="magenta">#E11584</color>
 </resources>

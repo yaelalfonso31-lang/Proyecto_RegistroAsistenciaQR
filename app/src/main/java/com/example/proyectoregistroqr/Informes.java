@@ -1,7 +1,11 @@
 package com.example.proyectoregistroqr;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -17,6 +21,8 @@ import java.util.ArrayList;
 public class Informes extends AppCompatActivity {
 
     private PieChart graficaPastel;
+    private Button btnAtras;
+    private TextView txtAsistencia, txtFaltas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +32,15 @@ public class Informes extends AppCompatActivity {
         graficaPastel = findViewById(R.id.graficaPastel);
         configurarGrafica();
         llenarDatosGrafica();
+        txtAsistencia = findViewById(R.id.txtAsistencia);
+        txtFaltas = findViewById(R.id.txtFaltas);
+
+        btnAtras = findViewById(R.id.btnAtras);
+
+        btnAtras.setOnClickListener(v -> {
+            Intent intent = new Intent(Informes.this, pantallaMenu.class);
+            startActivity(intent);
+        });
     }
 
     private void configurarGrafica() {
@@ -75,5 +90,11 @@ public class Informes extends AppCompatActivity {
 
         graficaPastel.setData(data);
         graficaPastel.invalidate(); // Refrescar la gráfica
+
+        int asistencias = 85;
+        int faltas = 15;
+
+        txtAsistencia.setText(asistencias + "%");
+        txtFaltas.setText(faltas + "%");
     }
 }
