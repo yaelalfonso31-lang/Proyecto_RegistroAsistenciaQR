@@ -3,6 +3,7 @@ package com.example.proyectoregistroqr;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +19,7 @@ public class GenerarQR extends AppCompatActivity {
 
     private ImageView ivCodigoQR;
     private TextView tvFecha;
-    private Button btnVolver;
+    private ImageButton btnVolver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,7 +29,7 @@ public class GestionActivity extends AppCompatActivity {
     private Adaptador adapter;
     private List<TablaAsistencias> listaAsistencias;
     private DatabaseReference myRef;
-    private Button btnAtras;
+    private ImageButton btnAtras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
