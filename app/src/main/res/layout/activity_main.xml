@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
         android:background="@drawable/custom_edittext"
+        android:backgroundTint="@color/white"
         app:cardCornerRadius="30dp"
         app:cardElevation="20dp">
 

@@ -5,72 +5,71 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".pantallaMenu">
 
-    <androidx.cardview.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        app:cardCornerRadius="30dp"
-        app:cardElevation="20dp">
+        android:orientation="vertical"
+        android:padding="24dp">
 
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
+            android:text="Menú Principal"
+            android:textAlignment="center"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginBottom="40dp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Menú Principal"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="34sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="40dp" />
+        <Button
+            android:id="@+id/btnEscanerQR"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Escanear QR"
+            android:textSize="20sp"
+            app:cornerRadius="20dp"
+            android:textColor="@color/white"
+            android:drawableLeft="@drawable/baseline_camera_enhance_24" />
 
-            <Button
-                android:id="@+id/btnEscanerQR"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Escanear QR"
-                android:visibility="gone"
-                android:textSize="20sp"
-                app:cornerRadius="20dp"/>
+        <Button
+            android:id="@+id/btnGenerarQR"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Generar QR del día"
+            android:textSize="20sp"
+            app:cornerRadius="20dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/morado"
+            android:textColor="@color/white"
+            android:drawableLeft="@drawable/outline_barcode_scanner_24"/>
 
-            <Button
-                android:id="@+id/btnGenerarQR"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Generar QR del día"
-                android:visibility="gone"
-                android:textSize="20sp"
-                app:cornerRadius="20dp"/>
+        <Button
+            android:id="@+id/btnGestion"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Gestión de Asistencias"
+            android:textSize="20sp"
+            app:cornerRadius="20dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/azul_cielo"
+            android:textColor="@color/white"
+            android:drawableLeft="@drawable/outline_assignment_ind_24"/>
 
-            <Button
-                android:id="@+id/btnGestion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Gestión de Asistencias"
-                android:visibility="gone"
-                android:textSize="20sp"
-                app:cornerRadius="20dp" />
+        <Button
+            android:id="@+id/btnInformes"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Informes y Gráficas"
+            android:textSize="20sp"
+            app:cornerRadius="20dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/green"
+            android:textColor="@color/white"
+            android:drawableLeft="@drawable/outline_monitoring_24"/>
 
-            <Button
-                android:id="@+id/btnInformes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Informes y Gráficas"
-                android:visibility="gone"
-                android:textSize="20sp"
-                app:cornerRadius="20dp"/>
-
-
-
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </LinearLayout>
 </LinearLayout>

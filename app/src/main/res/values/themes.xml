@@ -2,15 +2,11 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Estilos" parent="Theme.Material3.Light">
         <item name="colorPrimary">@color/azul_primary</item>
-        <item name="colorSecondary">@color/verde_exito</item>
-        <item name="colorAccent">@color/black</item>
     </style>
 
-    <style name="Base.Theme.Estilos.2" parent="Theme.Material3.Dark">
+    <style name="Base.Theme.Estilos2" parent="Theme.Material3.Dark">
         <item name="colorPrimary">@color/azul_primary</item>
-        <item name="colorSecondary">@color/rojo_error</item>
-        <item name="colorAccent">@color/white</item>
     </style>
 
-    <style name="Theme.Estilos" parent="Base.Theme.Estilos" />
+    <style name="Theme.ProyectoRegistroQR" parent="Base.Theme.ProyectoRegistroQR" />
 </resources>
