@@ -31,6 +31,7 @@
             android:exported="false" />
         <activity
             android:name=".Exito"
+            android:theme="@style/Base.Theme.Estilos2"
             android:exported="false" />
         <activity
             android:name=".Informes"
