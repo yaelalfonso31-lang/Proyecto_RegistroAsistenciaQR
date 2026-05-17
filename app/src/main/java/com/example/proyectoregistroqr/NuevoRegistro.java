@@ -10,11 +10,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -28,11 +30,17 @@ public class NuevoRegistro extends AppCompatActivity {
     private EditText etMatricula, etNombre, etFecha, etHora;
     private Calendar calendario = Calendar.getInstance();
 
+    private String nrcClaseSeleccionada;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_nuevo_registro);
+
+        nrcClaseSeleccionada = getIntent().getStringExtra("nrc");
+        if (nrcClaseSeleccionada == null) nrcClaseSeleccionada = "00000"; // Por seguridad
+
 
         // 1. PRIMERO enlazamos todas las variables con los IDs del diseño
         btnAtras = findViewById(R.id.btnAtras);
@@ -98,6 +106,7 @@ public class NuevoRegistro extends AppCompatActivity {
         String fecha = etFecha.getText().toString().trim();
         String hora = etHora.getText().toString().trim();
 
+
         // Validaciones estrictas
         if (TextUtils.isEmpty(matricula)) {
             etMatricula.setError("Ingrese la matrícula");
@@ -130,20 +139,33 @@ public class NuevoRegistro extends AppCompatActivity {
 
         // Conexión a Firebase
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Asistencias");
-        String nuevoId = myRef.push().getKey();
-        TablaAsistencias nuevaAsistencia = new TablaAsistencias(nuevoId, matricula, nombre, fecha, hora);
+        String idRegistroUnico = matricula + "_" + nrcClaseSeleccionada + "_" + fecha;
 
-        if (nuevoId != null) {
-            myRef.child(nuevoId).setValue(nuevaAsistencia)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(this, "Registro guardado en Firebase", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(NuevoRegistro.this, Exito.class);
-                        startActivity(intent);
-                        finish();
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(this, "Error al guardar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-        }
+        // 2. BUSCAMOS SI YA EXISTE EN FIREBASE
+        myRef.child(idRegistroUnico).addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull com.google.firebase.database.DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // Si ya existe, detenemos el proceso y avisamos
+                    Toast.makeText(NuevoRegistro.this, "El alumno ya tiene asistencia registrada en esta clase hoy", Toast.LENGTH_LONG).show();
+                } else {
+                    // Si no existe, creamos la asistencia y le INYECTAMOS EL NRC para que aparezca en la tabla
+                    TablaAsistencias nuevaAsistencia = new TablaAsistencias(idRegistroUnico, matricula, nombre, fecha, hora);
+                    nuevaAsistencia.setNrc(nrcClaseSeleccionada);
+
+                    myRef.child(idRegistroUnico).setValue(nuevaAsistencia)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(NuevoRegistro.this, "Registro guardado exitosamente", Toast.LENGTH_SHORT).show();
+                                finish(); // Cerramos y volvemos a la tabla (donde ahora sí aparecerá)
+                            })
+                            .addOnFailureListener(e -> Toast.makeText(NuevoRegistro.this, "Error al guardar: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(NuevoRegistro.this, "Error de red", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

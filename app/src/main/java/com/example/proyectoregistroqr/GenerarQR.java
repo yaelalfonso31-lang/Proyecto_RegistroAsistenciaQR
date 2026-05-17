@@ -18,8 +18,9 @@ import java.util.Locale;
 public class GenerarQR extends AppCompatActivity {
 
     private ImageView ivCodigoQR;
-    private TextView tvFecha;
+    private TextView tvFecha, tvClaseInfo;
     private ImageButton btnVolver;
+    private String nrcClase, nombreClase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,14 +29,23 @@ public class GenerarQR extends AppCompatActivity {
 
         ivCodigoQR = findViewById(R.id.ivCodigoQR);
         tvFecha = findViewById(R.id.tvFechaQR);
+        tvClaseInfo = findViewById(R.id.tvClaseInfo); // Asegúrate de tener o agregar este TextView en tu XML si quieres mostrar el nombre
         btnVolver = findViewById(R.id.btnVolverGenerar);
 
-        // 1. Obtener la fecha actual del sistema
-        String fechaHoy = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        tvFecha.setText("Válido para: " + fechaHoy);
+        // 1. Obtener datos de la asignatura actual
+        nrcClase = getIntent().getStringExtra("nrc");
+        nombreClase = getIntent().getStringExtra("nombreClase");
 
-        // 2. Generar el QR con el texto de la fecha
-        generarQR(fechaHoy);
+        String fechaHoy = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+        if (tvClaseInfo != null && nombreClase != null) {
+            tvClaseInfo.setText(nombreClase + " (NRC: " + nrcClase + ")");
+        }
+        tvFecha.setText("Válido para el día: " + fechaHoy);
+
+        // 2. Formatear contenido combinando NRC y Fecha. Esto garantiza unicidad por día y clase.
+        String contenidoQR = nrcClase + ";" + fechaHoy;
+        generarQR(contenidoQR);
 
         btnVolver.setOnClickListener(v -> finish());
     }
@@ -43,7 +53,6 @@ public class GenerarQR extends AppCompatActivity {
     private void generarQR(String texto) {
         try {
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-            // Generamos el Bitmap (imagen) del QR con tamaño 400x400
             Bitmap bitmap = barcodeEncoder.encodeBitmap(texto, BarcodeFormat.QR_CODE, 400, 400);
             ivCodigoQR.setImageBitmap(bitmap);
         } catch (Exception e) {

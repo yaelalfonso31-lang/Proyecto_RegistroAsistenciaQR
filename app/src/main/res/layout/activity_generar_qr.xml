@@ -62,6 +62,16 @@
 
         </androidx.cardview.widget.CardView>
 
+        <TextView
+            android:id="@+id/tvClaseInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre de la Clase (NRC)"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center" />
+
+
         <ImageButton
             android:id="@+id/btnVolverGenerar"
             android:layout_width="150dp"

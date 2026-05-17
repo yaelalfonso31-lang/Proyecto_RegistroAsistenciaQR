@@ -92,9 +92,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void accederSegunRol(String rol) {
-        Intent intent = new Intent(MainActivity.this, pantallaMenu.class);
-        intent.putExtra("rol", rol); // Enviamos el rol ("admin" o "alumno")
-        startActivity(intent);
-        finish();
+        if (rol != null && rol.equals("admin")) {
+            // MODIFICADO: El profesor va primero a seleccionar o crear su clase
+            Intent intent = new Intent(MainActivity.this, ListaClases.class);
+            intent.putExtra("rol", rol);
+            startActivity(intent);
+            finish();
+        } else {
+            // El alumno va directo al menú simplificado (donde solo ve "Escanear QR")
+            Intent intent = new Intent(MainActivity.this, pantallaMenu.class);
+            intent.putExtra("rol", rol);
+            startActivity(intent);
+            finish();
+        }
     }
 }

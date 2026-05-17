@@ -14,6 +14,7 @@ public class TablaAsistencias {
     private String nombre;
     private String fecha;
     private String hora;
+    private String nrc;
     public TablaAsistencias() {}
 
     public TablaAsistencias(String id, String matricula, String nombre, String fecha, String hora) {
@@ -22,6 +23,7 @@ public class TablaAsistencias {
         this.nombre = nombre;
         this.fecha = fecha;
         this.hora = hora;
+        this.nrc = nrc;
     }
 
     public String getId() { return id; }
@@ -36,4 +38,7 @@ public class TablaAsistencias {
 
     public String getFecha() { return fecha; }
     public void setFecha(String fecha) { this.fecha = fecha; }
+
+    public String getNrc() { return nrc; }
+    public void setNrc(String nrc) { this.nrc = nrc; }
 }

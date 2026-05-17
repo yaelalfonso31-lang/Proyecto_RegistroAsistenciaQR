@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,37 +32,48 @@ public class GestionActivity extends AppCompatActivity {
     private DatabaseReference myRef;
     private ImageButton btnAtras;
 
+    // Variable para almacenar el NRC de la clase que seleccionó el profesor
+    private String nrcClaseSeleccionada;
+    private String nombreClaseSeleccionada;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gestion);
 
-        btnAtras = findViewById(R.id.btnAtras);
+        // 1. Recuperamos los datos de la clase seleccionada desde el Intent
+        nrcClaseSeleccionada = getIntent().getStringExtra("nrc");
+        nombreClaseSeleccionada = getIntent().getStringExtra("nombreClase");
 
+        btnAtras = findViewById(R.id.btnAtras);
         btnAtras.setOnClickListener(v -> {
             finish();
         });
 
-        // 1. Inicializar la conexión a la base de datos de Firebase
+        // 2. Inicializar la conexión a la base de datos de Firebase
         myRef = FirebaseDatabase.getInstance().getReference("Asistencias");
 
-        // 2. Configurar el RecyclerView
+        // 3. Configurar el RecyclerView
         recyclerView = findViewById(R.id.recyclerViewAsistencias);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         listaAsistencias = new ArrayList<>();
 
-        // 3. Configurar el botón flotante para crear un registro manual
+        // 4. Configurar el botón flotante para crear un registro manual
         FloatingActionButton fabNuevo = findViewById(R.id.fabNuevoRegistro);
         fabNuevo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(GestionActivity.this, NuevoRegistro.class);
+                // Le pasamos el NRC a la pantalla de NuevoRegistro para que sepa a qué clase pertenece
+                if (nrcClaseSeleccionada != null) {
+                    intent.putExtra("nrc", nrcClaseSeleccionada);
+                }
                 startActivity(intent);
             }
         });
 
-        // 4. Configurar el Adaptador y sus acciones (Editar y Eliminar)
+        // 5. Configurar el Adaptador y sus acciones (Editar y Eliminar)
         adapter = new Adaptador(listaAsistencias, new Adaptador.OnItemClickListener() {
             @Override
             public void onEditarClick(int position) {
@@ -73,6 +85,8 @@ public class GestionActivity extends AppCompatActivity {
                 intent.putExtra("nombre", asistenciaSeleccionada.getNombre());
                 intent.putExtra("fecha", asistenciaSeleccionada.getFecha());
                 intent.putExtra("hora", asistenciaSeleccionada.getHora());
+                // Pasamos también el NRC a la pantalla de edición
+                intent.putExtra("nrc", asistenciaSeleccionada.getNrc());
 
                 startActivity(intent);
             }
@@ -85,15 +99,25 @@ public class GestionActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
 
-        // 5. Leer los datos desde Firebase en tiempo real
+        // 6. Leer los datos desde Firebase en tiempo real y filtrar por NRC
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listaAsistencias.clear(); // Limpiamos la lista para evitar datos duplicados en pantalla
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     TablaAsistencias asistencia = dataSnapshot.getValue(TablaAsistencias.class);
+
                     if (asistencia != null) {
-                        listaAsistencias.add(asistencia);
+                        // Verificamos si estamos dentro de una clase específica
+                        if (nrcClaseSeleccionada != null) {
+                            // Filtramos: solo agregamos la asistencia si su NRC coincide con el de la clase actual
+                            if (asistencia.getNrc() != null && asistencia.getNrc().equals(nrcClaseSeleccionada)) {
+                                listaAsistencias.add(asistencia);
+                            }
+                        } else {
+                            // Si por alguna razón no hay NRC seleccionado, agregamos todas (comportamiento anterior)
+                            listaAsistencias.add(asistencia);
+                        }
                     }
                 }
                 adapter.notifyDataSetChanged(); // Refrescamos la tabla con los datos nuevos
@@ -111,7 +135,7 @@ public class GestionActivity extends AppCompatActivity {
         String idABorrar = listaAsistencias.get(position).getId();
 
         // 2. Apuntamos exactamente al nodo de este registro en la base de datos
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Asistencias").child(idABorrar);
+        DatabaseReference refABorrar = FirebaseDatabase.getInstance().getReference("Asistencias").child(idABorrar);
 
         // 3. Construimos la ventana emergente
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -121,12 +145,10 @@ public class GestionActivity extends AppCompatActivity {
         // 4. Qué hacer si el usuario presiona "Eliminar"
         builder.setPositiveButton("Eliminar", (dialog, which) -> {
             // Borramos el dato de la base de datos en la nube
-            myRef.removeValue()
+            refABorrar.removeValue()
                     .addOnSuccessListener(aVoid -> {
                         // Si se borró bien en la nube, mostramos un mensaje
                         Toast.makeText(GestionActivity.this, "Registro eliminado correctamente", Toast.LENGTH_SHORT).show();
-                        // (Ojo: No necesitas borrar de listaAsistencias manualmente aquí,
-                        // porque el ValueEventListener de tu onCreate detectará el cambio y actualizará la tabla automáticamente)
                     })
                     .addOnFailureListener(e -> {
                         // Si hubo un error de conexión, avisamos

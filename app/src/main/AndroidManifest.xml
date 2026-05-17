@@ -18,24 +18,30 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.Estilos">
         <activity
+            android:name=".ListaClases"
+            android:exported="false" />
+        <activity
+            android:name=".CrearClase"
+            android:exported="false" />
+        <activity
             android:name=".GenerarQR"
             android:exported="false" />
         <activity
             android:name=".RegistroUsuario"
-            android:theme="@style/Base.Theme.Estilos2"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Base.Theme.Estilos2" />
         <activity
             android:name=".NuevoRegistro"
-            android:theme="@style/Base.Theme.Estilos2"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Base.Theme.Estilos2" />
         <activity
             android:name=".EditarRegistro"
-            android:theme="@style/Base.Theme.Estilos2"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Base.Theme.Estilos2" />
         <activity
             android:name=".Exito"
-            android:theme="@style/Base.Theme.Estilos2"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Base.Theme.Estilos2" />
         <activity
             android:name=".Informes"
             android:exported="false" />
@@ -47,12 +53,12 @@
             android:exported="false" />
         <activity
             android:name=".pantallaQR"
-            android:theme="@style/Base.Theme.Estilos2"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Base.Theme.Estilos2" />
         <activity
             android:name=".pantallaMenu"
-            android:theme="@style/Base.Theme.Estilos2"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Base.Theme.Estilos2" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
