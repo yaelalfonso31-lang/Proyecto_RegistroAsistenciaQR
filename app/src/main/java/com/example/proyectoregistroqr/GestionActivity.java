@@ -39,8 +39,7 @@ public class GestionActivity extends AppCompatActivity {
         btnAtras = findViewById(R.id.btnAtras);
 
         btnAtras.setOnClickListener(v -> {
-            Intent intent = new Intent(GestionActivity.this, pantallaMenu.class);
-            startActivity(intent);
+            finish();
         });
 
         // 1. Inicializar la conexión a la base de datos de Firebase

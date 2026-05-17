@@ -27,8 +27,7 @@ public class Exito extends AppCompatActivity {
         btnAtras = findViewById(R.id.btnAtras);
 
         btnAtras.setOnClickListener(v -> {
-            Intent intent = new Intent(Exito.this, pantallaMenu.class);
-            startActivity(intent);
+            finish(); // Cierra esta pantalla y vuelve a la tabla sin crear otra instancia
         });
     }
 }

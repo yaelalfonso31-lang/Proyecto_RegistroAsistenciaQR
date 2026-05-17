@@ -30,16 +30,15 @@ public class Informes extends AppCompatActivity {
         setContentView(R.layout.activity_informes);
 
         graficaPastel = findViewById(R.id.graficaPastel);
-        configurarGrafica();
-        llenarDatosGrafica();
         txtAsistencia = findViewById(R.id.txtAsistencia);
         txtFaltas = findViewById(R.id.txtFaltas);
-
         btnAtras = findViewById(R.id.btnAtras);
 
+        configurarGrafica();
+        llenarDatosGrafica();
+
         btnAtras.setOnClickListener(v -> {
-            Intent intent = new Intent(Informes.this, pantallaMenu.class);
-            startActivity(intent);
+            finish();
         });
     }
 
