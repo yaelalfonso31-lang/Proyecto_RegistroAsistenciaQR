@@ -40,6 +40,17 @@
         android:textSize="20sp"
         android:inputType="textPersonName"/>
 
+        <EditText
+            android:id="@+id/etMatriculaRegistro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Matrícula (9 dígitos)"
+            android:inputType="number"
+            android:maxLength="9"
+            android:visibility="visible"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"/>
+
     <EditText
         android:id="@+id/etCorreoRegistro"
         android:layout_width="match_parent"

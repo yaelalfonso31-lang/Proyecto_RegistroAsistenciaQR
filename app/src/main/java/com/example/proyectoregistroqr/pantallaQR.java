@@ -26,12 +26,14 @@ public class pantallaQR extends AppCompatActivity {
         super.onCreate(Bundle);
         setContentView(R.layout.activity_pantalla_qr);
 
+        // Iniciar el escáner inmediatamente al abrir la pantalla
         new IntentIntegrator(this)
                 .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
-                .setPrompt("Escanea el código QR de la Clase del Profesor")
+                .setPrompt("Escanea el código QR del Maestro")
                 .setCameraId(0)
                 .setBeepEnabled(true)
-                .setOrientationLocked(false)
+                .setOrientationLocked(true) // Mantenemos en true para bloquear la rotación
+                .setCaptureActivity(CapturaVertical.class) // Llamamos a la pantalla vertical
                 .initiateScan();
     }
 

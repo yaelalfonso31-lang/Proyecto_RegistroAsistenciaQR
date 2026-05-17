@@ -5,15 +5,17 @@ public class Usuario {
     private String nombre;
     private String correo;
     private String contrasena;
+    private String matricula;
     private String rol; // "admin" o "alumno"
 
     public Usuario() {} // Constructor vacío para Firebase
 
-    public Usuario(String id, String nombre, String correo, String contrasena, String rol) {
+    public Usuario(String id, String nombre, String correo, String contrasena, String matricula, String rol) {
         this.id = id;
         this.nombre = nombre;
         this.correo = correo;
         this.contrasena = contrasena;
+        this.matricula = matricula;
         this.rol = rol;
     }
 
@@ -23,4 +25,5 @@ public class Usuario {
     public String getCorreo() { return correo; }
     public String getContrasena() { return contrasena; }
     public String getRol() { return rol; }
+    public String getMatricula() { return matricula; }
 }

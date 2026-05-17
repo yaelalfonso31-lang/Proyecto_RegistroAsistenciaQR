@@ -28,6 +28,7 @@ public class EditarRegistro extends AppCompatActivity {
     private Button btnCancelar, btnGuardar;
     private EditText etMatricula, etNombre, etFecha, etHora;
     private String idRegistro;
+    private String nrcRegistro; // Variable para atrapar el NRC original
     private Calendar calendario = Calendar.getInstance();
 
     @Override
@@ -55,6 +56,7 @@ public class EditarRegistro extends AppCompatActivity {
         if (intent != null && intent.hasExtra("matricula")) {
             idRegistro = intent.getStringExtra("id");
             etMatricula.setText(intent.getStringExtra("matricula"));
+            nrcRegistro = intent.getStringExtra("nrc"); // Rescatamos el NRC para no perderlo
             etNombre.setText(intent.getStringExtra("nombre"));
             etFecha.setText(intent.getStringExtra("fecha"));
             etHora.setText(intent.getStringExtra("hora"));
@@ -150,6 +152,10 @@ public class EditarRegistro extends AppCompatActivity {
 
         // Creamos el objeto con los datos modificados
         TablaAsistencias asistenciaActualizada = new TablaAsistencias(idRegistro, matricula, nombre, fecha, hora);
+
+        if (nrcRegistro != null) {
+            asistenciaActualizada.setNrc(nrcRegistro);
+        }
 
         // Sobrescribimos la información en la base de datos
         myRef.setValue(asistenciaActualizada).addOnSuccessListener(aVoid -> {
