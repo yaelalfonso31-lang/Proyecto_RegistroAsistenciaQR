@@ -13,31 +13,58 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp">
-
-        <TextView
-            android:id="@+id/tvItemNombreClase"
-            android:layout_width="wrap_content"
+        android:padding="16dp">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Materia"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvItemNombreClase"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Materia"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btnEditarClase"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_edit"
+                android:contentDescription="Editar clase"
+                app:tint="@color/black" />
+
+            <ImageButton
+                android:id="@+id/btnEliminarClase"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_delete"
+                android:contentDescription="Eliminar clase"
+                app:tint="@color/rojo_error" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvItemNrc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="NRC: 00000"
-            android:textSize="15sp"
+            android:textColor="#666666"
+            android:textSize="14sp"
             android:layout_marginTop="4dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            android:gravity="center_vertical">
+            android:layout_marginTop="8dp"
+            android:weightSum="2">
 
             <TextView
                 android:id="@+id/tvItemHorario"
@@ -45,16 +72,18 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Horario"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/tvItemAlumnos"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Inscritos: 0"
-                android:textSize="14sp"
+                android:gravity="end"
+                android:textSize="13sp"
                 android:textColor="@color/verde_exito"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
     </LinearLayout>

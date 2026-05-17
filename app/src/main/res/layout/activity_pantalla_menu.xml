@@ -71,5 +71,17 @@
             android:textColor="@color/white"
             android:drawableLeft="@drawable/outline_monitoring_24"/>
 
+        <Button
+            android:id="@+id/btnCerrarSesionMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cerrar Sesión"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            app:icon="@drawable/cerrarsesion"
+            app:iconTint="@color/white"
+            android:backgroundTint="@color/rojo_error"
+            android:layout_marginTop="31dp"/>
+
     </LinearLayout>
 </LinearLayout>

@@ -14,6 +14,7 @@
         android:padding="16dp"
         android:gravity="center">
 
+
         <TextView
             android:id="@+id/tvTituloClases"
             android:layout_width="match_parent"
@@ -58,37 +59,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="16dp"
             android:gravity="center_vertical"
-            android:paddingTop="8dp">
+            android:padding="16dp">
 
-            <ImageButton
-                android:id="@+id/btnAtras"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/back"
-                android:contentDescription="Atrás"
-                android:scaleType="centerInside"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCerrarSesionClases"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="Salir"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:backgroundTint="@color/rojo_error"
+                app:cornerRadius="14dp"
+                app:icon="@drawable/cerrarsesion"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconTint="@android:color/white"/>
 
             <View
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/fabNuevaClase"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:src="@android:drawable/ic_input_add"
+                android:text="Agregar Clase"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 app:backgroundTint="@color/verde_exito"
-                app:tint="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:contentDescription="Añadir nueva clase" />
+                app:cornerRadius="14dp"
+                app:icon="@drawable/agregar"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconTint="@android:color/white" />
 
         </LinearLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
