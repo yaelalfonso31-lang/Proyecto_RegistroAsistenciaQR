@@ -20,8 +20,15 @@
             android:text="Nueva Clase"
             android:textSize="32sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:layout_marginBottom="24dp"/>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:lottie_rawRes="@raw/wumpussmile"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
 
         <EditText
             android:id="@+id/etNombreClase"
@@ -71,6 +78,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Cancelar"
+                android:textSize="18sp"
+                android:textColor="@color/white"
                 android:backgroundTint="@color/rojo_error"
                 android:layout_marginEnd="8dp"/>
 
@@ -80,6 +89,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Guardar"
+                android:textSize="18sp"
+                android:textColor="@color/white"
                 android:backgroundTint="@color/verde_exito"
                 android:layout_marginStart="8dp"/>
         </LinearLayout>

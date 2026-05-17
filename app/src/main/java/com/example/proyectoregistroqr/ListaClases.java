@@ -2,6 +2,7 @@ package com.example.proyectoregistroqr;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,7 @@ public class ListaClases extends AppCompatActivity {
     private ClaseAdapter adapter;
     private List<Clase> listaClases;
     private FloatingActionButton fabNuevaClase;
+    private ImageButton btnAtras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,11 @@ public class ListaClases extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerViewClases);
         fabNuevaClase = findViewById(R.id.fabNuevaClase);
+        btnAtras = findViewById(R.id.btnAtras);
+
+        btnAtras.setOnClickListener(v -> {
+            finish();
+        });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         listaClases = new ArrayList<>();
