@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".GestionActivity">
 
     <androidx.core.widget.NestedScrollView
@@ -13,7 +12,7 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/bottomBar">
+        app:layout_constraintBottom_toTopOf="@id/bottomBarGestion">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,41 +44,35 @@
                 app:cardElevation="4dp"
                 app:strokeWidth="1dp"
                 app:strokeColor="#E0E0E0"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginTop="30dp">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewAsistencias"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
                     android:clipToPadding="false"
-                    android:padding="4dp" />
+                    android:padding="4dp"
+                    android:nestedScrollingEnabled="false" />
 
             </com.google.android.material.card.MaterialCardView>
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
-        android:id="@+id/bottomBar"
+        android:id="@+id/bottomBarGestion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp"
+        android:padding="16dp"
         android:gravity="center_vertical"
-        android:background="@color/white"
-        android:elevation="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:paddingTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageButton
             android:id="@+id/btnAtras"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@android:color/transparent"
             android:src="@drawable/back"
             android:contentDescription="Atrás"
             android:scaleType="centerInside"/>
@@ -96,7 +89,6 @@
             android:src="@android:drawable/ic_input_add"
             app:backgroundTint="@color/verde_exito"
             app:tint="@color/white"
-            app:elevation="4dp"
             android:contentDescription="Agregar asistencia manual" />
 
     </LinearLayout>
