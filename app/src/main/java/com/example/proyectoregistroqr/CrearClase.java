@@ -36,25 +36,47 @@ public class CrearClase extends AppCompatActivity {
         String estudiantesStr = etEstudiantes.getText().toString().trim();
         String horario = etHorario.getText().toString().trim();
 
-        if (TextUtils.isEmpty(nombre)) {
-            etNombre.setError("Ingrese el nombre de la clase");
+        // 1. Verificar que no haya campos completamente vacíos
+        if (TextUtils.isEmpty(nombre) || TextUtils.isEmpty(nrc) || TextUtils.isEmpty(estudiantesStr) || TextUtils.isEmpty(horario)) {
+            Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        // 2. Validar Nombre: Solo letras y espacios permitidos
+        if (!nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")) {
+            etNombre.setError("El nombre de la materia solo puede contener letras y espacios");
+            etNombre.requestFocus();
+            return;
+        }
+
+        // 3. Validar NRC: Exactamente 5 dígitos
         if (nrc.length() != 5) {
             etNrc.setError("El NRC debe tener exactamente 5 dígitos");
-            return;
-        }
-        if (TextUtils.isEmpty(estudiantesStr)) {
-            etEstudiantes.setError("Ingrese la cantidad de alumnos");
-            return;
-        }
-        if (TextUtils.isEmpty(horario)) {
-            etHorario.setError("Ingrese el horario");
+            etNrc.requestFocus();
             return;
         }
 
-        int estudiantes = Integer.parseInt(estudiantesStr);
+        // 4. Validar cantidad de Estudiantes (Máximo 100, Mínimo 1)
+        int estudiantes = 0;
+        try {
+            estudiantes = Integer.parseInt(estudiantesStr);
+            if (estudiantes <= 0) {
+                etEstudiantes.setError("Debe haber al menos 1 estudiante inscrito");
+                etEstudiantes.requestFocus();
+                return;
+            }
+            if (estudiantes > 100) {
+                etEstudiantes.setError("El límite máximo permitido es de 100 alumnos");
+                etEstudiantes.requestFocus();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            etEstudiantes.setError("Por favor, ingresa un número válido");
+            etEstudiantes.requestFocus();
+            return;
+        }
 
+        // 5. Conexión y guardado en Firebase
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Clases");
         String idClase = myRef.push().getKey();
 
@@ -64,9 +86,9 @@ public class CrearClase extends AppCompatActivity {
             myRef.child(idClase).setValue(nuevaClase)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(this, "Clase registrada exitosamente", Toast.LENGTH_SHORT).show();
-                        finish();
+                        finish(); // Se cierra y vuelve a la lista
                     })
-                    .addOnFailureListener(e -> Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> Toast.makeText(this, "Error de red: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
     }
 }

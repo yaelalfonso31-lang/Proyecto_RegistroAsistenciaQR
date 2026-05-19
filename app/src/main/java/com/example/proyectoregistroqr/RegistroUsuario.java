@@ -2,6 +2,7 @@ package com.example.proyectoregistroqr;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,17 +54,43 @@ public class RegistroUsuario extends AppCompatActivity {
         String pass = etPass.getText().toString().trim();
         String rolSeleccionado = ((RadioButton)findViewById(rgRol.getCheckedRadioButtonId())).getText().toString().toLowerCase();
 
-        // Usamos un array de un solo elemento para poder modificar la variable dentro del Listener de Firebase
         final String[] rol = {rolSeleccionado};
         final String[] matricula = {"N/A"};
 
-        // 1. Validaciones generales (Locales)
+        // ==========================================
+        // 1. VALIDACIONES ESTRICTAS DE FORMATO
+        // ==========================================
+
         if (TextUtils.isEmpty(nombre) || TextUtils.isEmpty(correo) || TextUtils.isEmpty(pass)) {
             Toast.makeText(this, "Completa todos los campos principales", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // 2. Validaciones específicas según reglas de negocio por rol
+        // A. Validar Nombre: Solo letras y espacios (incluye acentos y ñ)
+        if (!nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")) {
+            etNombre.setError("El nombre solo puede contener letras y espacios");
+            etNombre.requestFocus();
+            return;
+        }
+
+        // B. Validar Correo: Formato correcto
+        if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
+            etCorreo.setError("Ingresa un correo electrónico válido");
+            etCorreo.requestFocus();
+            return;
+        }
+
+        // C. Validar Contraseña Segura: Mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número
+        if (!pass.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$")) {
+            etPass.setError("Debe tener al menos 8 caracteres, un número, una mayúscula y una minúscula");
+            etPass.requestFocus();
+            return;
+        }
+
+        // ==========================================
+        // 2. VALIDACIONES DE ROL Y MATRÍCULA
+        // ==========================================
+
         if (rol[0].equals("maestro")) {
             String codigoIngresado = etCodigoMaestro.getText().toString().trim();
             if (!codigoIngresado.equals("123456")) {
@@ -71,14 +98,15 @@ public class RegistroUsuario extends AppCompatActivity {
                 etCodigoMaestro.requestFocus();
                 return;
             }
-            rol[0] = "admin"; // Clasificación interna
+            rol[0] = "admin";
         } else {
             matricula[0] = etMatricula.getText().toString().trim();
             if (TextUtils.isEmpty(matricula[0])) {
-                etMatricula.setError("La matrícula es obligatoria para los alumnos");
+                etMatricula.setError("La matrícula es obligatoria");
                 etMatricula.requestFocus();
                 return;
             }
+            // Aunque el XML limita a 9, validamos en código por seguridad
             if (matricula[0].length() != 9) {
                 etMatricula.setError("La matrícula debe tener exactamente 9 dígitos");
                 etMatricula.requestFocus();
@@ -86,10 +114,11 @@ public class RegistroUsuario extends AppCompatActivity {
             }
         }
 
-        // 3. Conexión a Firebase para validación de DUPLICADOS
+        // ==========================================
+        // 3. VALIDACIÓN DE DUPLICADOS EN LA NUBE Y GUARDADO
+        // ==========================================
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Usuarios");
 
-        // Leemos todos los usuarios una sola vez para buscar coincidencias
         mDatabase.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(com.google.firebase.database.DataSnapshot snapshot) {
@@ -99,7 +128,7 @@ public class RegistroUsuario extends AppCompatActivity {
                     String correoDB = userSnapshot.child("correo").getValue(String.class);
                     String matriculaDB = userSnapshot.child("matricula").getValue(String.class);
 
-                    // A. Verificamos si el correo ya existe (Aplica para maestros y alumnos)
+                    // Verificamos si el correo ya existe
                     if (correoDB != null && correoDB.equalsIgnoreCase(correo)) {
                         etCorreo.setError("Este correo ya está registrado");
                         etCorreo.requestFocus();
@@ -107,7 +136,7 @@ public class RegistroUsuario extends AppCompatActivity {
                         break;
                     }
 
-                    // B. Verificamos si la matrícula ya existe (Solo aplica para alumnos)
+                    // Verificamos si la matrícula ya existe (Solo alumnos)
                     if (rol[0].equals("alumno") && matriculaDB != null && matriculaDB.equals(matricula[0])) {
                         etMatricula.setError("Esta matrícula ya pertenece a otra cuenta");
                         etMatricula.requestFocus();
@@ -116,7 +145,7 @@ public class RegistroUsuario extends AppCompatActivity {
                     }
                 }
 
-                // 4. Si no hay duplicados, procedemos a guardar el usuario en la nube
+                // Si todo está correcto, guardamos
                 if (!existeDuplicado) {
                     String userId = mDatabase.push().getKey();
                     Usuario nuevoUsuario = new Usuario(userId, nombre, correo, pass, rol[0], matricula[0]);
@@ -124,9 +153,9 @@ public class RegistroUsuario extends AppCompatActivity {
                     if (userId != null) {
                         mDatabase.child(userId).setValue(nuevoUsuario).addOnSuccessListener(aVoid -> {
                             Toast.makeText(RegistroUsuario.this, "Cuenta registrada exitosamente", Toast.LENGTH_SHORT).show();
-                            finish(); // Retorno a la pantalla de autenticación
+                            finish();
                         }).addOnFailureListener(e -> {
-                            Toast.makeText(RegistroUsuario.this, "Error al guardar en la nube: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegistroUsuario.this, "Error de red: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
                     }
                 }

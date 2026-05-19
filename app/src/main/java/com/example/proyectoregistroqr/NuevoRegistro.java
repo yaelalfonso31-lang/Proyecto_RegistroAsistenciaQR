@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class NuevoRegistro extends AppCompatActivity {
@@ -41,7 +42,6 @@ public class NuevoRegistro extends AppCompatActivity {
         nrcClaseSeleccionada = getIntent().getStringExtra("nrc");
         if (nrcClaseSeleccionada == null) nrcClaseSeleccionada = "00000"; // Por seguridad
 
-
         // 1. PRIMERO enlazamos todas las variables con los IDs del diseño
         btnAtras = findViewById(R.id.btnAtras);
         btnRegistrar = findViewById(R.id.btnRegistrar);
@@ -56,18 +56,22 @@ public class NuevoRegistro extends AppCompatActivity {
             return insets;
         });
 
-        // 2. DESPUÉS usamos las vistas para poner la fecha/hora de hoy
+        // 2. DESPUÉS usamos las vistas para poner la fecha/hora de hoy por defecto
         actualizarFechaEnCampo();
         actualizarHoraEnCampo();
 
         // 3. Configuramos los selectores (Calendario y Reloj)
         etFecha.setOnClickListener(v -> {
-            new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+            DatePickerDialog dialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
                 calendario.set(Calendar.YEAR, year);
                 calendario.set(Calendar.MONTH, month);
                 calendario.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 actualizarFechaEnCampo();
-            }, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH), calendario.get(Calendar.DAY_OF_MONTH)).show();
+            }, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH), calendario.get(Calendar.DAY_OF_MONTH));
+
+            // Bloqueo Visual: Deshabilita seleccionar fechas en el futuro
+            dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+            dialog.show();
         });
 
         etHora.setOnClickListener(v -> {
@@ -83,7 +87,7 @@ public class NuevoRegistro extends AppCompatActivity {
 
         btnAtras.setOnClickListener(v -> {
             Toast.makeText(this, "Registro cancelado", Toast.LENGTH_SHORT).show();
-            finish(); // Cierra esta pantalla y vuelve a la tabla sin crear otra instancia
+            finish();
         });
     }
 
@@ -99,15 +103,13 @@ public class NuevoRegistro extends AppCompatActivity {
         etHora.setText(sdf.format(calendario.getTime()));
     }
 
-    // Aquí hemos unificado las validaciones estrictas y el guardado en Firebase
     private void validarYGuardarEnFirebase() {
         String matricula = etMatricula.getText().toString().trim();
         String nombre = etNombre.getText().toString().trim();
         String fecha = etFecha.getText().toString().trim();
         String hora = etHora.getText().toString().trim();
 
-
-        // Validaciones estrictas
+        // Validaciones estrictas de Matrícula y Nombre
         if (TextUtils.isEmpty(matricula)) {
             etMatricula.setError("Ingrese la matrícula");
             etMatricula.requestFocus();
@@ -128,6 +130,8 @@ public class NuevoRegistro extends AppCompatActivity {
             etNombre.requestFocus();
             return;
         }
+
+        // Validación de campos de tiempo
         if (TextUtils.isEmpty(fecha)) {
             etFecha.setError("Ingrese la fecha");
             return;
@@ -137,11 +141,29 @@ public class NuevoRegistro extends AppCompatActivity {
             return;
         }
 
+        // Validación Lógica: Bloquear fechas futuras por código
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+            Date fechaIngresada = sdf.parse(fecha);
+
+            // Obtenemos la fecha de hoy "limpia" (sin horas) para comparar justamente
+            Date fechaHoy = sdf.parse(sdf.format(new Date()));
+
+            if (fechaIngresada != null && fechaIngresada.after(fechaHoy)) {
+                etFecha.setError("La fecha no puede ser en el futuro");
+                Toast.makeText(this, "No puedes registrar asistencias de días que aún no pasan", Toast.LENGTH_LONG).show();
+                return;
+            }
+        } catch (Exception e) {
+            etFecha.setError("Formato de fecha inválido");
+            return;
+        }
+
         // Conexión a Firebase
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Asistencias");
         String idRegistroUnico = matricula + "_" + nrcClaseSeleccionada + "_" + fecha;
 
-        // 2. BUSCAMOS SI YA EXISTE EN FIREBASE
+        // BUSCAMOS SI YA EXISTE EN FIREBASE
         myRef.child(idRegistroUnico).addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(@NonNull com.google.firebase.database.DataSnapshot snapshot) {
