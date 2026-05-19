@@ -9,21 +9,21 @@
     android:fillViewport="true"
     tools:context=".RegistroUsuario">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="24dp"
         android:gravity="center">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Crear Cuenta"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:layout_marginBottom="20dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Crear Cuenta"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginBottom="20dp"/>
 
         <com.airbnb.lottie.LottieAnimationView
             android:layout_width="match_parent"
@@ -32,14 +32,14 @@
             app:lottie_autoPlay="true"
             app:lottie_loop="true"/>
 
-    <EditText
-        android:id="@+id/etNombreRegistro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Nombre completo"
-        android:layout_marginTop="20dp"
-        android:textSize="20sp"
-        android:inputType="textPersonName"/>
+        <EditText
+            android:id="@+id/etNombreRegistro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre completo"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:inputType="textPersonName"/>
 
         <EditText
             android:id="@+id/etMatriculaRegistro"
@@ -52,55 +52,76 @@
             android:textSize="20sp"
             android:layout_marginTop="20dp"/>
 
-    <EditText
-        android:id="@+id/etCorreoRegistro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Correo electrónico"
-        android:textSize="20sp"
-        android:inputType="textEmailAddress"/>
+        <EditText
+            android:id="@+id/etCorreoRegistro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Correo electrónico"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:inputType="textEmailAddress"/>
 
-    <EditText
-        android:id="@+id/etPassRegistro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Contraseña"
-        android:textSize="20sp"
-        android:inputType="textPassword"/>
+        <EditText
+            android:id="@+id/etPassRegistro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Contraseña"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:inputType="textPassword"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Selecciona tu rol:"
-        android:layout_marginTop="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Selecciona tu rol:"
+            android:textSize="18sp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="10dp"/>
 
-    <RadioGroup
-        android:id="@+id/rgRol"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <RadioButton android:id="@+id/rbAlumno" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Alumno" android:checked="true" android:textSize="20sp"/>
-        <RadioButton android:id="@+id/rbMaestro" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Maestro" android:textSize="20sp"/>
-    </RadioGroup>
+        <RadioGroup
+            android:id="@+id/rgRol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
 
-    <EditText
-        android:id="@+id/etCodigoMaestro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Código de Maestro"
-        android:inputType="numberPassword"
-        android:visibility="gone"
-        android:layout_marginTop="10dp"/>
+            <RadioButton
+                android:id="@+id/rbAlumno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alumno"
+                android:checked="true"
+                android:textSize="18sp"
+                android:layout_marginEnd="16dp"/>
 
-    <Button
-        android:id="@+id/btnFinalizarRegistro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Registrarse"
-        android:backgroundTint="@color/verde_exito"
-        android:textColor="@color/white"
-        android:layout_marginTop="20dp"
-        android:textSize="20sp"/>
+            <RadioButton
+                android:id="@+id/rbMaestro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Maestro"
+                android:textSize="18sp"/>
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/etCodigoMaestro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Código de Maestro"
+            android:inputType="numberPassword"
+            android:visibility="gone"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"/>
+
+        <Button
+            android:id="@+id/btnFinalizarRegistro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Registrarse"
+            android:backgroundTint="@color/verde_exito"
+            android:textColor="@color/white"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="16dp"
+            android:textSize="20sp"/>
 
     </LinearLayout>
 
